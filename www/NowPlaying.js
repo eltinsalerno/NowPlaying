@@ -2,21 +2,20 @@
 // NowPlaying.js
 // Now Playing Cordova Plugin
 //
-// Created by François LASSERRE on 12/05/13.
-// Copyright 2013 François LASSERRE. All rights reserved.
-// MIT Licensed
-//
-(function(cordova) {
 
-    function NowPlaying() {}
+var nowPlaying = module.exports;
 
-    /**
-     * Update metadatas.
-     */
-    NowPlaying.prototype.updateMetas = function(artist, title, album, cover) {
-        cordova.exec(null, null, 'NowPlaying', 'updateMetas', [artist, title, album, cover]);
-    };
 
-    module.exports = new NowPlaying();
+//params = [artist, title, album, cover, duration]
+nowPlaying.updateMetas = function(success, fail, params) {
+    cordova.exec(success, fail, 'NowPlaying', 'updateMetas', params);
+};
 
-})(window.cordova || window.Cordova);
+nowPlaying.setMetas = function(success, fail, params) {
+    cordova.exec(success, fail, 'NowPlaying', 'setMetas', params);
+};
+
+nowPlaying.receiveRemoteEvent = function(event) {
+	var ev = new Event("remote-event");
+	 document.dispatchEvent(ev);
+}
