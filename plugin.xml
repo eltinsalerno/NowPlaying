@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="com.silverorange.now-playing"
-    version="1.0.0">
+    id="com.eltinsalerno.nowplaying"
+    version="1.0.1">
 
     <engines>
         <engine name="cordova" version=">=3.0.0" />
     </engines>
 
-    <name>now-playing</name>
+    <name>NowPlaying</name>
     <keywords>lockscreen,media,now,playing</keywords>
 
-    <description>iOS native lock-screen now-playing API.</description>
+    <description>Native lock-screen NowPlaying.</description>
 
-    <js-module src="www/nowplaying.js" name="now-playing">
+    <js-module src="www/nowplaying.js" name="NowPlaying">
         <clobbers target="window.NowPlaying" />
     </js-module>
 
-    <author>François LASSERRE, Michael GAUTHIER</author>
+    <author>Martin Salerno</author>
 
     <license>MIT License</license>
 
-    <info>You need to add the MediaPlayer framework to the list of libraries linked to the project in Build Phases in Xcode.</info>
+    <info>NowPlaying lockscreen</info>
 
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
@@ -31,6 +31,6 @@
         </config-file>
         <header-file src="src/ios/NowPlaying.h" />
         <source-file src="src/ios/NowPlaying.m" />
+        <framework src="MediaPlayer.framework"/>
     </platform>
-
 </plugin>
