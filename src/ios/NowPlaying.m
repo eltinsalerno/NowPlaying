@@ -4,7 +4,6 @@
 //
 
 #import "NowPlaying.h"
-#import <AVFoundation/AVFoundation.h>
 @implementation NowPlaying
 static NowPlaying *nowPlaying = nil;
 
@@ -85,15 +84,13 @@ void waitFor(NSTimeInterval duration, WaitCompletionBlock completion)
 
 - (void)setMetas:(CDVInvokedUrlCommand*)command
 {
+    elapsed = [command.arguments objectAtIndex:0];
     [self applyMetas];
 }
 - (void)applyMetas
 {
-    
-   
-    
     if (NSClassFromString(@"MPNowPlayingInfoCenter") && title != nil)  {
-        waitFor(0.1, ^
+        waitFor(0.15, ^
                 {
                     MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
                     infoCenter.nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -101,16 +98,17 @@ void waitFor(NSTimeInterval duration, WaitCompletionBlock completion)
                                      title, MPMediaItemPropertyTitle,
                                      album, MPMediaItemPropertyAlbumTitle,
                                      artwork, MPMediaItemPropertyArtwork,
-                                    duration, MPMediaItemPropertyPlaybackDuration,
-                                    elapsed, MPNowPlayingInfoPropertyElapsedPlaybackTime,
+                                     duration, MPMediaItemPropertyPlaybackDuration,
+                                     elapsed, MPNowPlayingInfoPropertyElapsedPlaybackTime,
                                      nil];
-                    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-                    NSLog(@"NowPlaying currentTime %@",audioSession);
                     
+                    [[MPRemoteCommandCenter sharedCommandCenter].nextTrackCommand addTarget:self action:@selector(remoteNextPrevTrackCommandReceived:)];
+                    [[MPRemoteCommandCenter sharedCommandCenter].previousTrackCommand addTarget:self action:@selector(remoteNextPrevTrackCommandReceived:)];
                 });
     }
 }
 
+-(void) remoteNextPrevTrackCommandReceived:(id)event {}
 
 - (void)receiveRemoteEvent:(UIEvent *)receivedEvent {
     
@@ -121,31 +119,31 @@ void waitFor(NSTimeInterval duration, WaitCompletionBlock completion)
         switch (receivedEvent.subtype) {
                 
             case UIEventSubtypeRemoteControlTogglePlayPause:
-                NSLog(@"playpause clicked.");
+                //NSLog(@"playpause clicked.");
                // [self applyMetas];
                 subtype = @"nowPlayingPlayPause";
                 break;
                 
             case UIEventSubtypeRemoteControlPlay:
-                NSLog(@"play clicked.");
-                [self applyMetas];
+               // NSLog(@"play clicked.");
+               // [self applyMetas];
                 subtype = @"nowPlayingPlay";
                 break;
                 
             case UIEventSubtypeRemoteControlPause:
-                [self applyMetas];
-                NSLog(@"nowplaying pause clicked.");
+               // [self applyMetas];
+               // NSLog(@"nowplaying pause clicked.");
                 subtype = @"nowPlayingPause";
                 break;
                 
             case UIEventSubtypeRemoteControlPreviousTrack:
                 //[self previousTrack: nil];
-                NSLog(@"prev clicked.");
+                //NSLog(@"prev clicked.");
                 subtype = @"nowPlayingPrevTrack";
                 break;
                 
             case UIEventSubtypeRemoteControlNextTrack:
-                NSLog(@"next clicked.");
+                //NSLog(@"next clicked.");
                 subtype = @"nowPlayingNextTrack";
                 //[self nextTrack: nil];
                 break;
